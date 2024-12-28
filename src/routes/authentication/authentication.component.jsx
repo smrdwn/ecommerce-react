@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
   auth,
-  signInWithGooglePopup,
-  createUserDocumentAuth,
 } from '../../utils/firebase/firebase.utils';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 import SignUpForm from '../../components/sign-up-form/sign-up-form.component';
+import SignInForm from '../../components/sign-in-form/sign-in-form.component';
 
-const SignIn = () => {
+import './authentication.styles.scss';
+
+const Authentication = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -24,18 +25,6 @@ const SignIn = () => {
     return () => unsubscribe();
   }, []);
 
-  // Google Sign-In with Popup
-  const handleGoogleSignIn = async () => {
-    try {
-      const { user } = await signInWithGooglePopup();
-      console.log('Popup Sign-In Success:', user);
-      await createUserDocumentAuth(user);
-      setUser(user);
-    } catch (error) {
-      console.error('Error signing in with Google (Popup):', error.message);
-    }
-  };
-
   // Sign Out
   const handleSignOut = async () => {
     try {
@@ -48,13 +37,11 @@ const SignIn = () => {
   };
 
   return (
-    <div>
-      <h1>Sign In Page</h1>
-          <button onClick={handleSignOut}>Sign Out</button>
-          <button onClick={handleGoogleSignIn}>Sign In with Google (Popup)</button>
+    <div className='authentication-container'>
+          <SignInForm />
           <SignUpForm />
     </div>
   );
 };
 
-export default SignIn;
+export default Authentication;
