@@ -1,5 +1,4 @@
 import {useState} from "react";
-
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 
@@ -14,8 +13,7 @@ const defaultFormFields = {
 
 const SignInForm = () => {
 
-    const [formFields,
-        setFormFields] = useState(defaultFormFields);
+    const [formFields, setFormFields] = useState(defaultFormFields);
     const {email, password} = formFields;
 
     const resetFormFields = () => {
@@ -36,8 +34,7 @@ const SignInForm = () => {
         event.preventDefault();
 
         try {
-            const response = await signInAuthUserWithEmailAndPassword(email, password)
-            console.log(response);
+            const {user} = await signInAuthUserWithEmailAndPassword(email, password)
             resetFormFields();
         } catch (err) {
             if (err.code === 'auth/invalid-credential') {
@@ -51,10 +48,7 @@ const SignInForm = () => {
     // Google Sign-In with Popup
     const handleGoogleSignIn = async() => {
         try {
-            const {user} = await signInWithGooglePopup();
-            console.log('Popup Sign-In Success:', user);
-            await createUserDocumentAuth(user);
-            setUser(user);
+            await signInWithGooglePopup();
         } catch (error) {
             console.error('Error signing in with Google (Popup):', error.message);
         }
