@@ -1,10 +1,10 @@
 import {useState} from "react";
 import FormInput from "../form-input/form-input.component";
-import Button from "../button/button.component";
+import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 
-import {signInWithGooglePopup, createUserDocumentAuth, signInAuthUserWithEmailAndPassword} from '../../utils/firebase/firebase.utils';
+import {signInWithGooglePopup, signInAuthUserWithEmailAndPassword} from '../../utils/firebase/firebase.utils';
 
-import './sign-in-form.styles.scss';
+import { SignInContainer, ButtonsContainer } from './sign-in-form.styles';
 
 const defaultFormFields = {
     email: '',
@@ -34,7 +34,7 @@ const SignInForm = () => {
         event.preventDefault();
 
         try {
-            const {user} = await signInAuthUserWithEmailAndPassword(email, password)
+            await signInAuthUserWithEmailAndPassword(email, password)
             resetFormFields();
         } catch (err) {
             if (err.code === 'auth/invalid-credential') {
@@ -55,7 +55,7 @@ const SignInForm = () => {
     };
 
     return (
-        <div className="sign-up-container">
+        <SignInContainer>
             <h2>Already have an account?</h2>
             <span>Sign in with your email and password</span>
             <form onSubmit={handleSubmit}>
@@ -74,12 +74,17 @@ const SignInForm = () => {
                     onChange={handleChange}
                     name="password"
                     value={password}/>
-                <div className="buttons-container">
-                    <Button type="submit" buttonType=''>Sign In</Button>
-                    <Button type='button' onClick={handleGoogleSignIn} buttonType='google'>Google Sign In</Button>
-                </div>
+                <ButtonsContainer>
+                    <Button type="submit">Sign In</Button>
+                    <Button 
+                    type='button' 
+                    onClick={handleGoogleSignIn} 
+                    buttonType={BUTTON_TYPE_CLASSES.google}>
+                        Sign In With Google
+                    </Button>
+                </ButtonsContainer>
             </form>
-        </div>
+        </SignInContainer>
     );
 }
 
