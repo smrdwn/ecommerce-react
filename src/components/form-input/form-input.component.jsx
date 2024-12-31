@@ -10,7 +10,7 @@ const FormInput = ({ label, ...otherProps }) => {
             <FormInputField {...otherProps} />
             {label && (
                 <FormInputLabel
-                    shrink={otherProps.value?.length > 0}
+                    $shrink={otherProps.value?.length > 0}
                     htmlFor={otherProps.id || 'form-input'}
                 >
                     {label}
