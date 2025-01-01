@@ -46,7 +46,7 @@ googleProvider.setCustomParameters({prompt: 'select_account'});
 const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
 
 // Create User Document in Firestore
-const createUserDocumentAuth = async(userAuth, additionalInformation={}) => {
+const createUserDocumentFromAuth = async(userAuth, additionalInformation={}) => {
     if (!userAuth) 
         return;
     
@@ -71,6 +71,7 @@ const createUserDocumentAuth = async(userAuth, additionalInformation={}) => {
     } else {
         console.log('User already exists in Firestore');
     }
+    return userSnapshot;
 };
 
 const createAuthUserWithEmailAndPassword = async(email, password) => {
@@ -99,6 +100,15 @@ const signInAuthUserWithEmailAndPassword = async(email, password) => {
 
   const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
 
+  export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
+            unsubscribe();
+            resolve(userAuth);
+        }, reject)
+    })
+  }
+
   // used to push shop_data to firebase db (used only once)
   export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
     const collectionRef = collection(db, collectionKey);
@@ -125,7 +135,7 @@ export {
     db, 
     auth, 
     signInWithGooglePopup, 
-    createUserDocumentAuth, 
+    createUserDocumentFromAuth, 
     createAuthUserWithEmailAndPassword, 
     signInAuthUserWithEmailAndPassword,
     handleSignOut,
